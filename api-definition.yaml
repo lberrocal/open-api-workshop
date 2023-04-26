@@ -1,0 +1,53 @@
+openapi: 3.0.1
+info:
+  title: Luis' API
+  version: '1.0'
+  description: A test API
+  termsOfService: https://test.example.com/tos
+  contact:
+    email: luis.berrocal@seb.se
+    name: Luis Berrocal
+    url: https://test.example.com/contact
+  license:
+    name: License
+    url: https://test.example.com/tos
+servers:
+  - url: https://my-json-server.typicode.com/lberrocal/open-api-workshop
+    variables: {}
+    description: User API
+paths:
+  /users:
+    summary: User level Operations
+    description: Create and read users
+    get:
+      summary: fetch users
+      description: Read users from the server
+      operationId: fetchUsers
+      responses:
+        '2XX':
+          description: Sucessfull fetch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullUser'
+        default:
+          description: Default error sample response
+      tags:
+        - users
+components:
+  schemas:
+    FullUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "anc123"
+        username:
+          type: string
+          example: "bear"
+        score:
+          type: integer
+          example: 55
+        active:
+          type: boolean
+          example: true
