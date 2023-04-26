@@ -12,9 +12,15 @@ info:
     name: License
     url: https://test.example.com/tos
 servers:
-  - url: http://localhost:3000
-    variables: {}
-    description: User API (Local)
+  - url: http://localhost:{port}
+    variables:
+      port:
+        default: '3000'
+        enum:
+          - '3000'
+          - '3001'
+        description: '3000; Development, 3001: NotUsed'
+    description: Local Server
   - url: https://my-json-server.typicode.com/lberrocal/open-api-workshop
     variables: {}
     description: User API
@@ -28,32 +34,50 @@ paths:
       operationId: fetchUsers
       responses:
         2XX:
-          description: Sucessfull fetch
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FullUser'
+          $ref: '#/components/responses/UserArrayResponseBody'
         default:
           description: Default error sample response
       tags:
         - users
     post:
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostNewUser'
+        $ref: '#/components/requestBodies/UserPostBody'
       summary: Create a new user
       description: Stores a user on the server
       operationId: createUser
       responses:
+        '201':
+          $ref: '#/components/responses/UserResponseBody'
         default:
           description: Default error sample response
       tags:
         - users
 components:
+  requestBodies:
+    UserPostBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostNewUser'
+  responses:
+    UserArrayResponseBody:
+      description: user array response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserArray'
+    UserResponseBody:
+      description: user creation response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FullUser'
   schemas:
+    UserArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/PostNewUser'
     PostNewUser:
       type: object
       properties:
