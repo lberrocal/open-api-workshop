@@ -6,12 +6,15 @@ info:
   termsOfService: https://test.example.com/tos
   contact:
     email: lberrocal@example.com
-    name: Lberrocal
+    name: lberrocal
     url: https://test.example.com/contact
   license:
     name: License
     url: https://test.example.com/tos
 servers:
+  - url: http://localhost:3000
+    variables: {}
+    description: User API (Local)
   - url: https://my-json-server.typicode.com/lberrocal/open-api-workshop
     variables: {}
     description: User API
@@ -24,7 +27,7 @@ paths:
       description: Read users from the server
       operationId: fetchUsers
       responses:
-        '2XX':
+        2XX:
           description: Sucessfull fetch
           content:
             application/json:
@@ -34,20 +37,40 @@ paths:
           description: Default error sample response
       tags:
         - users
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostNewUser'
+      summary: Create a new user
+      description: Stores a user on the server
+      operationId: createUser
+      responses:
+        default:
+          description: Default error sample response
+      tags:
+        - users
 components:
   schemas:
-    FullUser:
+    PostNewUser:
       type: object
       properties:
-        id:
-          type: string
-          example: "anc123"
         username:
           type: string
-          example: "bear"
+          example: luis
         score:
           type: integer
           example: 55
         active:
           type: boolean
           example: true
+    FullUser:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              example: anc123
+        - $ref: '#/components/schemas/PostNewUser'
